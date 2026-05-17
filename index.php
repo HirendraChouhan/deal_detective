@@ -15,6 +15,10 @@ if($sort == "high"){
 }
 
 $result = $conn->query($sql);
+
+$importError = $_SESSION['import_error'] ?? '';
+$importUrl = $_SESSION['import_url'] ?? '';
+unset($_SESSION['import_error'], $_SESSION['import_url']);
 ?>
 
 <!DOCTYPE html>
@@ -86,11 +90,17 @@ $result = $conn->query($sql);
 </section>
 <!-- IMPORT PRODUCT -->
 
-<div class="glass rounded-3xl p-6 mb-10">
+<div id="import-product" class="glass rounded-3xl p-6 mb-10">
 
     <h2 class="text-2xl font-bold mb-4">
         Import Product URL
     </h2>
+
+    <?php if ($importError): ?>
+        <div class="mb-4 rounded-2xl border border-red-400/40 bg-red-500/10 px-4 py-3 text-sm text-red-100">
+            <?= htmlspecialchars($importError) ?>
+        </div>
+    <?php endif; ?>
 
     <form method="POST"
         action="features/import_product.php"
@@ -99,6 +109,7 @@ $result = $conn->query($sql);
         <input
             type="text"
             name="url"
+            value="<?= htmlspecialchars($importUrl) ?>"
             placeholder="Paste Amazon or Flipkart product URL..."
             class="flex-1 bg-white/10 px-6 py-4 rounded-2xl outline-none">
 
